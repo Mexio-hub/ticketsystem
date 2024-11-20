@@ -17,9 +17,11 @@ const db = firebaseApp.firestore();
 function newTicket() {
 	const uid = sessionStorage.getItem("uid"); // get the uid of the current user
 	const title = document.getElementById("title").value; // get the title of the ticket
+	document.getElementById("title").value = ""; // clear the title input
 	const description = document.getElementById("description").value; // get the description of the ticket
+	document.getElementById("description").value = ""; // clear the description input
 	if (title === "" || description === "") { // check if title or description is empty
-		alert.log("Title or Description is empty!");
+		alert("Title or Description is empty!");
 		return;
 	}
 	console.log(title, description);
@@ -84,3 +86,13 @@ function attachEventListeners() {
 		});
 	});
 }
+
+const inputFields = document.querySelectorAll("input");
+inputFields.forEach(input => {
+    input.addEventListener("keyup", event => {
+        if (event.key === "Enter") {
+				document.querySelector("#submit").click();
+            event.preventDefault();
+        }
+    });
+});

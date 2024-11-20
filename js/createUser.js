@@ -65,7 +65,7 @@ function logIn() {
             window.location.href = "./home.html"
         })
         .catch((error) => {
-            console.error("Failed: " + error.message);
+            alert("Invalid email or password");
         })
 }
 

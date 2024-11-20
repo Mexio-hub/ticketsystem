@@ -122,6 +122,7 @@ function newComment() {
     const ticketId = sessionStorage.getItem("ticketId");
     const uid = sessionStorage.getItem("uid");
     const comment = document.getElementById("comment").value;
+	document.getElementById("comment").value = ""; // Clear the comment input field
     if (comment === "") {
         alert("Comment is empty!");
         return;
@@ -168,3 +169,13 @@ function closeTicket() {
 function backTicket() {
     window.location.href = "./home.html";
 }
+
+const inputFields = document.querySelectorAll("input");
+inputFields.forEach(input => {
+    input.addEventListener("keyup", event => {
+        if (event.key === "Enter") {
+			document.querySelector("#submitComment").click();
+            event.preventDefault();
+        }
+    });
+});
