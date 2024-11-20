@@ -1,5 +1,5 @@
   const firebaseApp = firebase.initializeApp({
-    apiKey: $CFSTORE,
+    apiKey: $vars.CFSTORE,
 	authDomain: "ticketsystem-fffc6.firebaseapp.com",
 	projectId: "ticketsystem-fffc6",
 	storageBucket: "ticketsystem-fffc6.firebasestorage.app",
