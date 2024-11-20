@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/ticket.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Helpdesk</title>
+</head>
+
+<header>
+	<div class="logo">
+		<img src="images/logo.png">
+	</div>
+</header>
+
+<body>
+
+	<div id="ticket">
+		<div id="ticketTitle"></div>
+
+		<div id="ticketDescription"></div>
+
+		<div id="comments"></div>
+		
+		<div id="addComment">
+			<label for="comment">Comment</label>
+			<input type="text" name="comment" id="comment" required>
+			
+		</div>
+		<div id="adminButtons">
+			<button id="submitComment" onclick="newComment()">Submit Comment</button>
+
+			<button id="close" onclick="closeTicket()">Close Ticket</button>
+
+			<button id="backButton" onclick="backTicket()">Back</button>
+		</div>
+
+	</div>
+
+
+	<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+
+	<script src="js/tickets.js"></script>
+	<script>showTicket()</script>
+</body>
+
+
+
+
+</html>

@@ -1,0 +1,77 @@
+header {
+	background-color:#00000040;
+	height:200px;
+}
+
+footer {
+	background-color:#00000040;
+	height:100px;
+}
+
+footer p {
+	text-align:center;
+	font-family: 'Courier New', Courier, monospace;
+	font-size:large;
+	color:white;
+}
+
+
+
+
+.logo img {
+	max-width:200px;
+}
+
+
+.logo {
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	height:100%;
+}
+
+
+body {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+  }
+  
+  footer {
+	margin-top: auto;
+  }
+
+
+
+#ticketCollage {
+	margin:auto;
+	margin-top:30px;
+	margin-bottom:20px;
+	width: 90%;
+	display: grid;
+	grid-template-columns: 33% 33% 33%;
+	justify-items: center; /* Center items horizontally */
+	align-items: center; /* Center items vertically */
+}
+
+.ticket {
+	margin: 10px;
+	padding: 10px;
+	width: 25vw;
+	display: flex;
+	flex-direction: column; /* Arrange children in a column */
+	justify-content: center; /* Center content horizontally */
+	align-items: center; /* Center content vertically */
+	cursor:pointer;
+	background-color: rgba(255, 255, 255, 0.756);
+	border-radius:25px;
+}
+
+.ticket h2, .ticket p {
+	cursor:pointer;
+}
+
+.ticket:hover {
+	background-color: rgba(255, 255, 255, 0.489);
+}
+

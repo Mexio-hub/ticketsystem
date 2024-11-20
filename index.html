@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/index.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Ticket</title>
+</head>
+
+<header>
+	<div class="logo">
+		<img src="images/logo.png">
+	</div>
+</header>
+
+<body>
+	<div class="login">
+		<h1>Log In</h1>
+		<div id="loginsignup">
+			<label id="emaillabel" for="email">E-Mail</label>
+			<input type="text" name="email" id="email" required>
+			<label id="passwordlabel" for="password">Password</label>
+			<input type="password" name="password" id="password" required>
+			<label for="fname" id="fnamelabel">First Name</label>
+			<input type="text" name="fname" id="fname" required>
+			<label for="lname" id="lnamelabel">Last Name</label>
+			<input type="text" name="lname" id="lname" required>
+			<label for="address" id="addresslabel">Address</label>
+			<input type="text" name="address" id="address" required>
+			<label for="zip" id="ziplabel">Zip Code</label>
+			<input type="number" name="zip" id="zip" required>
+			<label for="city" id="citylabel">City</label>
+			<input type="text" name="city" id="city" required>
+			<button id="loginButton" onclick="logIn()">Login</button>	
+			<button id="newUserButton" onclick="showCreateUserLabels()">or click here to sign up</button>
+			<button id="createUserButton" onclick="signUp()">Create User</button>
+		</div>
+	</div>
+
+
+	<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+
+	<script src="js/createUser.js"></script>
+	<script>hideCreateUserlabels()</script>
+</body>
+
+<footer>
+	<div class="footer">
+		<p>Ticket System © 2024 Arnevik</p>
+	</div>
+</footer>
+
+</html>
