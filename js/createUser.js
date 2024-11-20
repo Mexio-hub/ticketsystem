@@ -1,4 +1,7 @@
-  const firebaseApp = firebase.initializeApp({
+
+// Using Firestore and Firebase
+const firebaseApp = firebase.initializeApp({
+	// API is hardcoded in this build due to the lack of a backend server to store the API key securely in.
     apiKey: "AIzaSyBE7eh8wlqzHOo9ncYToD469qPVSQhPPvM",
 	authDomain: "ticketsystem-fffc6.firebaseapp.com",
 	projectId: "ticketsystem-fffc6",
@@ -12,7 +15,7 @@
 const db = firebaseApp.firestore();
 const auth = firebaseApp.auth();
 
-
+// Hiding and showing labels and input fields for creating a new user for the login page.
 function showCreateUserLabels() {
 	document.getElementById("fname").style.display = "block";
 	document.getElementById("lname").style.display = "block";
@@ -48,15 +51,15 @@ function hideCreateUserlabels() {
 
 
 
-// Logger inn bruker med epost og passord 
+// Logging in the user with email and password
 
 function logIn() {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
     auth.signInWithEmailAndPassword(email, password)
-        // Sjekker om bruker er pålogga
+        // Checking if the user is logged in
         .then((userCredentials) => {
-            // Oppretter ein sessionStorage variabel i nettlesaren. Denne brukes for å sjå om bruker er pålogga.
+            // Using sessionStorage to store the user id
             sessionStorage.setItem("uid", userCredentials.user.uid)
             // Redirect to home.html 
             window.location.href = "./home.html"
@@ -66,7 +69,7 @@ function logIn() {
         })
 }
 
-// Oppretter bruker med epost og passord 
+// Creating a user in Firebase Authentication and Firestore
 
 function signUp() {
     const email = document.getElementById("email").value;
@@ -81,9 +84,9 @@ function signUp() {
 		return;
 	}
 
-    // Oppretter bruker som kan logge seg på firebase og få tilgang til nettstaden
+    // Creating the user in the Firebase Authentication app
     auth.createUserWithEmailAndPassword(email, password)
-        // Lagrer også brukeren i collection "users"
+        // Creating the user in the Firestore database
         .then((userCredentials) => {
             sessionStorage.setItem("uid", userCredentials.user.uid)
             db.collection("users").doc(userCredentials.user.uid).set({

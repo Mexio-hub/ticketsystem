@@ -12,7 +12,7 @@ const firebaseApp = firebase.initializeApp({
 const db = firebaseApp.firestore();
 
 function loadComments() {
-    const ticketId = sessionStorage.getItem("ticketId");
+    const ticketId = sessionStorage.getItem("ticketId"); // ID of the ticket
     const ticketOwnerId = sessionStorage.getItem("ticketOwnerId"); // ID of the ticket owner
 
     console.log("Loading comments for ticketId:", ticketId);
@@ -23,7 +23,7 @@ function loadComments() {
     // Clear the existing comments
     commentsContainer.innerHTML = "";
 
-    // Step 1: Fetch all comments for the ticket
+    // Step 1: Fetch all comments for the ticket and order by timestamp
     db.collection("comments")
         .where("ticketId", "==", ticketId)
         .orderBy("timestamp", "asc")
@@ -42,7 +42,7 @@ function loadComments() {
 
             console.log("Comments fetched:", comments);
 
-            // Step 2: Fetch user data for all unique user IDs
+            // Step 2: Fetch user data for all unique user IDs and sort 
             const userPromises = Array.from(userIds).map((userId) =>
                 db.collection("users").doc(userId).get().then((doc) => {
                     if (doc.exists) {
@@ -74,6 +74,7 @@ function loadComments() {
                         commentElement.classList.add("adminComment");
                     }
 
+					// Add comment data to the comment element
                     commentElement.innerHTML = `
                         <p><strong>${userData ? userData.firstname + " " + userData.lastname : "Unknown User"}</strong></p>
                         <p>${comment.comment}</p>
@@ -92,6 +93,7 @@ function loadComments() {
 }
 
 
+// Show single ticket and load comments using loadComment function
 function showTicket() {
     const ticketId = sessionStorage.getItem("ticketId");
     const uid = sessionStorage.getItem("uid");
@@ -114,6 +116,8 @@ function showTicket() {
     });
 }
 
+
+// Add new comment to ticket
 function newComment() {
     const ticketId = sessionStorage.getItem("ticketId");
     const uid = sessionStorage.getItem("uid");
@@ -122,6 +126,7 @@ function newComment() {
         alert("Comment is empty!");
         return;
     }
+	// Add comment to the database
     db.collection("comments").add({
         comment: comment,
         ticketId: ticketId,
@@ -135,13 +140,14 @@ function newComment() {
     });
 }
 
+// Close ticket and move it to closedTickets collection
 function closeTicket() {
     const ticketId = sessionStorage.getItem("ticketId");
     db.collection("tickets").doc(ticketId).get().then((doc) => {
         if (doc.exists) {
             const ticketData = doc.data();
-            db.collection("closedTickets").doc(ticketId).set(ticketData).then(() => {
-                db.collection("tickets").doc(ticketId).delete().then(() => {
+            db.collection("closedTickets").doc(ticketId).set(ticketData).then(() => { // Add ticket to closedTickets collection
+                db.collection("tickets").doc(ticketId).delete().then(() => { // Delete ticket from tickets collection
                     console.log("Ticket Successfully Moved to Closed Tickets!");
                     window.location.href = "./home.html";
                 }).catch((error) => {
@@ -158,6 +164,7 @@ function closeTicket() {
     });
 }
 
+// Go back to home page
 function backTicket() {
     window.location.href = "./home.html";
 }

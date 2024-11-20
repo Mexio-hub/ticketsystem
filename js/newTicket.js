@@ -12,6 +12,8 @@ const firebaseApp = firebase.initializeApp({
 /* Firebase config */
 const db = firebaseApp.firestore();
 
+
+// Creating a new ticket
 function newTicket() {
 	const uid = sessionStorage.getItem("uid"); // get the uid of the current user
 	const title = document.getElementById("title").value; // get the title of the ticket
@@ -36,7 +38,7 @@ function newTicket() {
 
 
 function loadTickets() {
-	document.getElementById("ticketCollage").innerHTML = "";
+	document.getElementById("ticketCollage").innerHTML = ""; // Clear the ticket collage
 	const uid = sessionStorage.getItem("uid"); // get the uid of the current user
 
 	db.collection("admins").doc(uid).get().then((doc) => {
