@@ -11,7 +11,7 @@ const firebaseApp = firebase.initializeApp({
 
 /* Firebase config */
 const db = firebaseApp.firestore();
-
+const auth = firebaseApp.auth();
 
 // Creating a new ticket
 function newTicket() {
@@ -96,3 +96,9 @@ inputFields.forEach(input => {
         }
     });
 });
+
+function logOut() {
+	auth.signOut();
+	sessionStorage.removeItem("uid");
+	window.location.href = "index.html";
+}

@@ -62,3 +62,7 @@ button {
 	margin-left:0;
 	color:rgb(193, 193, 193);
 }
+
+.commentMisc {
+	display:flex;
+}

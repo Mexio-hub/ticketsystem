@@ -50,7 +50,6 @@ function hideCreateUserlabels() {
 
 
 
-
 // Logging in the user with email and password
 
 function logIn() {

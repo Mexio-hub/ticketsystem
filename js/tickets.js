@@ -12,84 +12,89 @@ const firebaseApp = firebase.initializeApp({
 const db = firebaseApp.firestore();
 
 function loadComments() {
-    const ticketId = sessionStorage.getItem("ticketId"); // ID of the ticket
-    const ticketOwnerId = sessionStorage.getItem("ticketOwnerId"); // ID of the ticket owner
+	const ticketId = sessionStorage.getItem("ticketId"); // ID of the ticket
+	const ticketOwnerId = sessionStorage.getItem("ticketOwnerId"); // ID of the ticket owner
+	const currentUserId = sessionStorage.getItem("uid"); // ID of the current user
 
-    console.log("Loading comments for ticketId:", ticketId);
-    console.log("Ticket owner ID:", ticketOwnerId);
+	console.log("Loading comments for ticketId:", ticketId);
+	console.log("Ticket owner ID:", ticketOwnerId);
 
-    const commentsContainer = document.getElementById("comments");
+	const commentsContainer = document.getElementById("comments");
 
-    // Clear the existing comments
-    commentsContainer.innerHTML = "";
+	// Clear the existing comments
+	commentsContainer.innerHTML = "";
 
-    // Step 1: Fetch all comments for the ticket and order by timestamp
-    db.collection("comments")
-        .where("ticketId", "==", ticketId)
-        .orderBy("timestamp", "asc")
-        .get()
-        .then((querySnapshot) => {
-            const comments = [];
-            const userIds = new Set();
+	// Step 1: Fetch all comments for the ticket and order by timestamp
+	db.collection("comments")
+		.where("ticketId", "==", ticketId)
+		.orderBy("timestamp", "asc")
+		.get()
+		.then((querySnapshot) => {
+			const comments = [];
+			const userIds = new Set();
 
-            // Collect comments and user IDs
-            querySnapshot.forEach((commentDoc) => {
-                const commentData = commentDoc.data();
-                commentData.id = commentDoc.id; // Add the document ID
-                comments.push(commentData);
-                userIds.add(commentData.uid); // Collect unique user IDs
-            });
+			// Collect comments and user IDs
+			querySnapshot.forEach((commentDoc) => {
+				const commentData = commentDoc.data();
+				commentData.id = commentDoc.id; // Add the document ID
+				comments.push(commentData);
+				userIds.add(commentData.uid); // Collect unique user IDs
+			});
 
-            console.log("Comments fetched:", comments);
+			console.log("Comments fetched:", comments);
 
-            // Step 2: Fetch user data for all unique user IDs and sort 
-            const userPromises = Array.from(userIds).map((userId) =>
-                db.collection("users").doc(userId).get().then((doc) => {
-                    if (doc.exists) {
-                        return { userId, ...doc.data() };
-                    } else {
-                        console.error("User not found:", userId);
-                        return null;
-                    }
-                })
-            );
+			// Step 2: Fetch user data for all unique user IDs and sort 
+			const userPromises = Array.from(userIds).map((userId) => {
+				db.collection("users").doc(userId).get().then((doc) => {
+					if (doc.exists) {
+						return { userId, ...doc.data() };
+					} else {
+						console.error("User not found:", userId);
+						return null;
+					}
+				});
+			});
 
-            return Promise.all(userPromises).then((users) => {
-                const userMap = new Map();
-                users.forEach((user) => {
-                    if (user) userMap.set(user.userId, user);
-                });
+			return Promise.all(userPromises).then((users) => {
+				const userMap = new Map();
+				users.forEach((user) => {
+					if (user) userMap.set(user.userId, user);
+				});
 
-                console.log("Users fetched:", userMap);
+				console.log("Users fetched:", userMap);
 
-                // Step 3: Render comments
-                comments.forEach((comment) => {
-                    const userData = userMap.get(comment.uid);
-                    const commentElement = document.createElement("div");
+				// Step 3: Render comments
+				comments.forEach((comment) => {
+					const userData = userMap.get(comment.uid);
+					const commentElement = document.createElement("div");
 
-                    commentElement.classList.add("comment");
-                    if (comment.uid === ticketOwnerId) {
-                        commentElement.classList.add("ownerComment");
-                    } else {
-                        commentElement.classList.add("adminComment");
-                    }
+					commentElement.classList.add("comment");
+					commentElement.classList.add(comment.uid);
+					if (comment.uid === ticketOwnerId) {
+						commentElement.classList.add("ownerComment");
+					} else {
+						commentElement.classList.add("adminComment");
+					}
 
 					// Add comment data to the comment element
-                    commentElement.innerHTML = `
-                        <p><strong>${userData ? userData.firstname + " " + userData.lastname : "Unknown User"}</strong></p>
-                        <p>${comment.comment}</p>
-                        <p class="timestamp">${new Date(comment.timestamp?.seconds * 1000).toLocaleString()}</p>
-                    `;
+					commentElement.innerHTML = `
+						<p><strong>${userData ? userData.firstname + " " + userData.lastname : "Unknown User"}</strong></p>
+						<p>${comment.comment}</p>
+						<div class="commentMisc">
+							<p class="timestamp">${new Date(comment.timestamp?.seconds * 1000).toLocaleString()}</p>
+							${comment.uid === currentUserId ? '<p class="edit ' + comment.id + '">edit</p>' : ''}
+						</div>
+					`;
 
-                    commentsContainer.appendChild(commentElement);
-                });
-            });
-        })
-        .catch((error) => {
-            console.error("Error loading comments:", error);
-        });
+					commentsContainer.appendChild(commentElement);
+				});
+			});
+		})
+		.catch((error) => {
+			console.error("Error loading comments:", error);
+		});
 
-    console.log("Comments loading...");
+	console.log("Comments loading...");
 }
 
 
@@ -178,4 +183,29 @@ inputFields.forEach(input => {
             event.preventDefault();
         }
     });
+});
+
+document.addEventListener("click", function (event) {
+	if (event.target.classList.contains("edit")) {
+		const commentElement = event.target.closest(".comment");
+		const editElement = commentElement.querySelector(".edit");
+		const commentId = editElement.classList[1]; // Assuming the second class is the comment ID
+		console.log("Editing comment with ID:", commentId);
+		const commentText = commentElement.querySelector("p:nth-of-type(2)").innerText;
+
+		// Prompt user to edit the comment
+		const newComment = prompt("Edit your comment:", commentText);
+		if (newComment !== null && newComment !== "") {
+			// Update the comment in the database
+			db.collection("comments").doc(commentId).update({
+				comment: newComment,
+				timestamp: firebase.firestore.FieldValue.serverTimestamp() // Update timestamp
+			}).then(() => {
+				console.log("Comment Successfully Updated!");
+				loadComments();
+			}).catch((error) => {
+				console.error("Error Updating Comment:", error);
+			});
+		}
+	}
 });

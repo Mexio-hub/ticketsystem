@@ -28,6 +28,7 @@
 			<label for="description">Description</label>
 			<input type="text" name="description" id="description" required>
 			<button id="submit" onclick="newTicket(), loadTickets()">Submit</button>
+			<button id="logout" onclick="logOut()">Log Out</button>
 		</div>
 	</div>
 </body>
@@ -37,6 +38,8 @@
 
 <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.3/firebase-firestore-compat.js"></script>
 
 <script src="js/newTicket.js"></script>
