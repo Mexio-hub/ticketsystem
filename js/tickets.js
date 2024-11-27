@@ -45,7 +45,7 @@ function loadComments() {
 
 			// Step 2: Fetch user data for all unique user IDs and sort 
 			const userPromises = Array.from(userIds).map((userId) => {
-				db.collection("users").doc(userId).get().then((doc) => {
+				return db.collection("users").doc(userId).get().then((doc) => {
 					if (doc.exists) {
 						return { userId, ...doc.data() };
 					} else {
@@ -65,9 +65,8 @@ function loadComments() {
 
 				// Step 3: Render comments
 				comments.forEach((comment) => {
-					const userData = userMap.get(comment.uid);
 					const commentElement = document.createElement("div");
-
+					const userData = userMap.get(comment.uid);
 					commentElement.classList.add("comment");
 					commentElement.classList.add(comment.uid);
 					if (comment.uid === ticketOwnerId) {
@@ -75,8 +74,6 @@ function loadComments() {
 					} else {
 						commentElement.classList.add("adminComment");
 					}
-
-					// Add comment data to the comment element
 					commentElement.innerHTML = `
 						<p><strong>${userData ? userData.firstname + " " + userData.lastname : "Unknown User"}</strong></p>
 						<p>${comment.comment}</p>
